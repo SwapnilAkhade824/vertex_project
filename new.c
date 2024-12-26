@@ -8,17 +8,25 @@ typedef enum AppState {
     HOME
 } AppState;
 
+typedef struct Account {
+    char name[MAX_INPUT_CHARS];
+    char accountNo[MAX_INPUT_CHARS];
+    char ifscCode[MAX_INPUT_CHARS];
+    float balance;
+} Account;
+
 int main() {
     // Screen dimensions
     const int screenWidth = 800;
     const int screenHeight = 600;
 
-    InitWindow(screenWidth, screenHeight, "Banking System with Input Handling");
+    // Initialize window
+    InitWindow(screenWidth, screenHeight, "Banking System");
 
     // App State
     AppState appState = LOGIN;
 
-    // Input fields
+    // User inputs
     char username[MAX_INPUT_CHARS + 1] = "";
     char password[MAX_INPUT_CHARS + 1] = "";
     bool isPasswordHidden = true;
@@ -28,6 +36,9 @@ int main() {
     // Mock credentials
     const char *validUsername = "user123";
     const char *validPassword = "password123";
+
+    // Account details (only shown after login)
+    Account userAccount = {"John Doe", "123456789", "IFSC0001", 1000.0};
 
     // Status message
     char statusMessage[100] = "";
@@ -63,8 +74,12 @@ int main() {
             DrawRectangle(300, 300, 200, 40, BLUE);
             DrawText("Login", 360, 310, 20, WHITE);
 
+            // Create Account Button
+            DrawRectangle(300, 370, 200, 40, GREEN);
+            DrawText("Create Account", 340, 380, 20, WHITE);
+
             // Status Message
-            DrawText(statusMessage, screenWidth / 2 - MeasureText(statusMessage, 20) / 2, 400, 20, RED);
+            DrawText(statusMessage, screenWidth / 2 - MeasureText(statusMessage, 20) / 2, 450, 20, RED);
 
             // Mouse Interaction
             Vector2 mousePos = GetMousePosition();
@@ -82,6 +97,11 @@ int main() {
                 } else {
                     strcpy(statusMessage, "Invalid username or password!");
                 }
+            }
+
+            // Create Account Request
+            if (CheckCollisionPointRec(mousePos, (Rectangle){300, 370, 200, 40}) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+                strcpy(statusMessage, "Account creation requested. Awaiting admin approval.");
             }
 
             // Keyboard Interaction for Inputs
@@ -113,8 +133,19 @@ int main() {
         } else if (appState == HOME) {
             // Home Page
             DrawText("Welcome to the Home Page", screenWidth / 2 - MeasureText("Welcome to the Home Page", 30) / 2, 50, 30, WHITE);
+            DrawText("Account Information", 50, 100, 20, WHITE);
+
+            // Account details
+            DrawText(TextFormat("Name: %s", userAccount.name), 50, 140, 20, WHITE);
+            DrawText(TextFormat("Account No: %s", userAccount.accountNo), 50, 170, 20, WHITE);
+            DrawText(TextFormat("IFSC Code: %s", userAccount.ifscCode), 50, 200, 20, WHITE);
+            DrawText(TextFormat("Balance: %.2f", userAccount.balance), 50, 230, 20, WHITE);
+
+            // Service Options
+            DrawText("Services: Transaction History, Loan Services, FD Creation", 50, 270, 20, LIGHTGRAY);
             DrawText("Press ESC to logout", 50, screenHeight - 50, 20, LIGHTGRAY);
 
+            // Logout
             if (IsKeyPressed(KEY_ESCAPE)) {
                 appState = LOGIN;
                 memset(username, 0, sizeof(username));
