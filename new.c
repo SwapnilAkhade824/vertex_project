@@ -65,7 +65,7 @@ int main() {
         int buttonHeight = 40;
         int boxWidth = 400;
         int boxX = screenWidth / 2 - boxWidth / 2;
-        int boxY = (screenHeight - 300) / 2;
+        int boxY = 200; // Adjusted to add more space below the logo
         int signInButtonX = boxX + (boxWidth / 2) - (buttonWidth / 2);
         int signInButtonY = boxY + 200;
         loginHovered = CheckCollisionPointRec(mousePosition, (Rectangle){signInButtonX, signInButtonY, buttonWidth, buttonHeight});
