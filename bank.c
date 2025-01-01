@@ -1,131 +1,71 @@
-#include <raylib.h>
-#include <string.h>
+#include "raylib.h"
 
-#define MAX_INPUT_CHARS 50
+#define SCREEN_WIDTH 800
+#define SCREEN_HEIGHT 600
 
-typedef enum AppState {
-    LOGIN,
-    HOME
-} AppState;
+int main(void)
+{
+    // Initialize the window and raylib
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Crest Bank");
 
-int main() {
-    // Screen dimensions
-    const int screenWidth = 800;
-    const int screenHeight = 600;
+    // Define button properties
+    Rectangle accountInfoButton = {SCREEN_WIDTH / 2 - 100, 250, 200, 50};
+    Rectangle servicesButton = {SCREEN_WIDTH / 2 - 100, 320, 200, 50};
+    Rectangle logoutButton = {SCREEN_WIDTH - 120, SCREEN_HEIGHT - 60, 100, 40};
 
-    InitWindow(screenWidth, screenHeight, "Banking System with Input Handling");
+    // Main game loop
+    while (!WindowShouldClose())
+    {
+        // Check for button interactions
+        Vector2 mousePoint = GetMousePosition();
 
-    // App State
-    AppState appState = LOGIN;
+        bool accountInfoHovered = CheckCollisionPointRec(mousePoint, accountInfoButton);
+        bool servicesHovered = CheckCollisionPointRec(mousePoint, servicesButton);
+        bool logoutHovered = CheckCollisionPointRec(mousePoint, logoutButton);
 
-    // Input fields
-    char username[MAX_INPUT_CHARS + 1] = "";
-    char password[MAX_INPUT_CHARS + 1] = "";
-    bool isPasswordHidden = true;
-    bool usernameActive = false;
-    bool passwordActive = false;
-
-    // Mock credentials
-    const char *validUsername = "user123";
-    const char *validPassword = "password123";
-
-    // Status message
-    char statusMessage[100] = "";
-
-    SetTargetFPS(60);
-
-    while (!WindowShouldClose()) {
-        BeginDrawing();
-        ClearBackground(DARKGRAY);
-
-        if (appState == LOGIN) {
-            // Login Page
-            DrawText("Login to Banking System", screenWidth / 2 - MeasureText("Login to Banking System", 30) / 2, 50, 30, WHITE);
-
-            // Username Field
-            DrawRectangle(300, 150, 200, 40, usernameActive ? LIGHTGRAY : GRAY);
-            DrawText("Username:", 200, 160, 20, WHITE);
-            DrawText(username, 310, 160, 20, DARKGRAY);
-
-            // Password Field
-            DrawRectangle(300, 220, 200, 40, passwordActive ? LIGHTGRAY : GRAY);
-            DrawText("Password:", 200, 230, 20, WHITE);
-            if (isPasswordHidden) {
-                char hiddenPassword[MAX_INPUT_CHARS + 1];
-                memset(hiddenPassword, '*', strlen(password));
-                hiddenPassword[strlen(password)] = '\0';
-                DrawText(hiddenPassword, 310, 230, 20, RAYWHITE);
-            } else {
-                DrawText(password, 310, 230, 20, DARKGRAY);
-            }
-
-            // Login Button
-            DrawRectangle(300, 300, 200, 40, BLUE);
-            DrawText("Login", 360, 310, 20, WHITE);
-
-            // Status Message
-            DrawText(statusMessage, screenWidth / 2 - MeasureText(statusMessage, 20) / 2, 400, 20, RED);
-
-            // Mouse Interaction
-            Vector2 mousePos = GetMousePosition();
-            if (CheckCollisionPointRec(mousePos, (Rectangle){300, 150, 200, 40}) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-                usernameActive = true;
-                passwordActive = false;
-            } else if (CheckCollisionPointRec(mousePos, (Rectangle){300, 220, 200, 40}) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-                usernameActive = false;
-                passwordActive = true;
-            } else if (CheckCollisionPointRec(mousePos, (Rectangle){300, 300, 200, 40}) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-                // Validate Login
-                if (strcmp(username, validUsername) == 0 && strcmp(password, validPassword) == 0) {
-                    appState = HOME;
-                    strcpy(statusMessage, "Login successful!");
-                } else {
-                    strcpy(statusMessage, "Invalid username or password!");
-                }
-            }
-
-            // Keyboard Interaction for Inputs
-            int key = GetCharPressed();
-            if (usernameActive) {
-                if (key >= 32 && key <= 126 && strlen(username) < MAX_INPUT_CHARS) {
-                    username[strlen(username)] = (char)key;
-                    username[strlen(username) + 1] = '\0';
-                }
-
-                if (IsKeyPressed(KEY_BACKSPACE) && strlen(username) > 0) {
-                    username[strlen(username) - 1] = '\0';
-                }
-            } else if (passwordActive) {
-                if (key >= 32 && key <= 126 && strlen(password) < MAX_INPUT_CHARS) {
-                    password[strlen(password)] = (char)key;
-                    password[strlen(password) + 1] = '\0';
-                }
-
-                if (IsKeyPressed(KEY_BACKSPACE) && strlen(password) > 0) {
-                    password[strlen(password) - 1] = '\0';
-                }
-            }
-
-            // Toggle Password Visibility
-            if (IsKeyPressed(KEY_TAB)) {
-                isPasswordHidden = !isPasswordHidden;
-            }
-        } else if (appState == HOME) {
-            // Home Page
-            DrawText("Welcome to the Home Page", screenWidth / 2 - MeasureText("Welcome to the Home Page", 30) / 2, 50, 30, WHITE);
-            DrawText("Press ESC to logout", 50, screenHeight - 50, 20, LIGHTGRAY);
-
-            if (IsKeyPressed(KEY_ESCAPE)) {
-                appState = LOGIN;
-                memset(username, 0, sizeof(username));
-                memset(password, 0, sizeof(password));
-                strcpy(statusMessage, "");
-            }
+        if (accountInfoHovered && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        {
+            // Perform Account Info action
+            TraceLog(LOG_INFO, "Account Information button clicked!");
         }
+
+        if (servicesHovered && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        {
+            // Perform Services action
+            TraceLog(LOG_INFO, "Services button clicked!");
+        }
+
+        if (logoutHovered && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        {
+            // Perform Logout action
+            TraceLog(LOG_INFO, "Logout button clicked! Exiting...");
+            break;
+        }
+
+        // Start drawing
+        BeginDrawing();
+
+        ClearBackground(RAYWHITE);
+
+        // Draw the header
+        DrawText("Crest Bank", SCREEN_WIDTH / 2 - MeasureText("Crest Bank", 40) / 2, 50, 40, DARKBLUE);
+        DrawText("HOMEPAGE", SCREEN_WIDTH / 2 - MeasureText("HOMEPAGE", 20) / 2, 100, 20, DARKGRAY);
+
+        // Draw buttons
+        DrawRectangleRec(accountInfoButton, accountInfoHovered ? LIGHTGRAY : SKYBLUE);
+        DrawRectangleRec(servicesButton, servicesHovered ? LIGHTGRAY : SKYBLUE);
+        DrawRectangleRec(logoutButton, logoutHovered ? LIGHTGRAY : RED);
+
+        // Draw button text
+        DrawText("Account Information", SCREEN_WIDTH / 2 - MeasureText("Account Information", 20) / 2, 265, 20, DARKBLUE);
+        DrawText("Services", SCREEN_WIDTH / 2 - MeasureText("Services", 20) / 2, 335, 20, DARKBLUE);
+        DrawText("Log Out", SCREEN_WIDTH - 110, SCREEN_HEIGHT - 50, 20, WHITE);
 
         EndDrawing();
     }
 
+    // Close the window and raylib
     CloseWindow();
+
     return 0;
 }

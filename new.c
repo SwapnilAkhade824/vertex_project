@@ -30,12 +30,16 @@ int main() {
     while (!WindowShouldClose()) {
         Vector2 mousePosition = GetMousePosition();
 
-        // Handle keyboard input for active field
-        if (IsKeyPressed(KEY_TAB)) {
-            accountIdActive = !accountIdActive;
-            passwordActive = !passwordActive;
+        // Handle mouse interaction for input fields
+        Rectangle accountIdBox = {screenWidth / 2 - 200, 260, 400, 30};
+        Rectangle passwordBox = {screenWidth / 2 - 200, 320, 400, 30};
+
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            accountIdActive = CheckCollisionPointRec(mousePosition, accountIdBox);
+            passwordActive = CheckCollisionPointRec(mousePosition, passwordBox);
         }
 
+        // Handle keyboard input for active field
         if (accountIdActive) {
             if (accountIdLength < 29 && IsKeyPressed(KEY_BACKSPACE) && accountIdLength > 0) {
                 accountId[--accountIdLength] = '\0';
@@ -64,14 +68,12 @@ int main() {
         int buttonWidth = 120;
         int buttonHeight = 40;
         int boxWidth = 400;
-        int boxX = screenWidth / 2 - boxWidth / 2;
-        int boxY = 200; // Adjusted to add more space below the logo
-        int signInButtonX = boxX + (boxWidth / 2) - (buttonWidth / 2);
-        int signInButtonY = boxY + 200;
+        int signInButtonX = screenWidth / 2 - buttonWidth / 2;
+        int signInButtonY = 380;
         loginHovered = CheckCollisionPointRec(mousePosition, (Rectangle){signInButtonX, signInButtonY, buttonWidth, buttonHeight});
 
         int createAccountButtonWidth = 180;
-        int createAccountButtonX = boxX + (boxWidth / 2) - (createAccountButtonWidth / 2);
+        int createAccountButtonX = screenWidth / 2 - createAccountButtonWidth / 2;
         int createAccountButtonY = signInButtonY + buttonHeight + 20;
         createAccountHovered = CheckCollisionPointRec(mousePosition, (Rectangle){createAccountButtonX, createAccountButtonY, createAccountButtonWidth, buttonHeight});
 
@@ -96,37 +98,20 @@ int main() {
                        (Rectangle){logoX, logoY, logoWidth, logoHeight}, 
                        (Vector2){0, 0}, 0, WHITE);
 
-        // Draw Bank Name
-       // DrawText("Crest Bank", screenWidth / 2 - MeasureText("Crest Bank", 40) / 2, logoY + logoHeight + 10, 40, DARKGRAY);
-
         // Draw Login Box
-        int boxHeight = 300;
-        DrawRectangle(boxX, boxY, boxWidth, boxHeight, WHITE); // Changed box background to white
-        DrawRectangleLines(boxX, boxY, boxWidth, boxHeight, GRAY);
+        DrawText("Account ID:", accountIdBox.x, accountIdBox.y - 20, 20, BLACK);
+        DrawRectangleRec(accountIdBox, WHITE);
+        DrawRectangleLinesEx(accountIdBox, 2, accountIdActive ? BLUE : DARKGRAY);
+        DrawText(accountId, accountIdBox.x + 5, accountIdBox.y + 5, 20, BLACK);
 
-        // Username Field
-        int inputBoxHeight = 30;
-        DrawText("Account ID:", boxX + 20, boxY + 40, 20, BLACK);
-        DrawRectangle(boxX + 20, boxY + 70, boxWidth - 40, inputBoxHeight, WHITE);
-        DrawRectangleLines(boxX + 20, boxY + 70, boxWidth - 40, inputBoxHeight, DARKGRAY);
-        DrawText(accountId, boxX + 25, boxY + 75, 20, BLACK);
-
-        // Password Field
-        DrawText("Password:", boxX + 20, boxY + 120, 20, BLACK);
-        DrawRectangle(boxX + 20, boxY + 150, boxWidth - 40, inputBoxHeight, WHITE);
-        DrawRectangleLines(boxX + 20, boxY + 150, boxWidth - 40, inputBoxHeight, DARKGRAY);
+        DrawText("Password:", passwordBox.x, passwordBox.y - 20, 20, BLACK);
+        DrawRectangleRec(passwordBox, WHITE);
+        DrawRectangleLinesEx(passwordBox, 2, passwordActive ? BLUE : DARKGRAY);
 
         char maskedPassword[30];
         memset(maskedPassword, '*', passwordLength);
         maskedPassword[passwordLength] = '\0';
-        DrawText(maskedPassword, boxX + 25, boxY + 155, 20, BLACK);
-
-        // Highlight active field
-        if (passwordActive) {
-            DrawRectangleLines(boxX + 20, boxY + 150, boxWidth - 40, inputBoxHeight, BLUE);
-        } else {
-            DrawRectangleLines(boxX + 20, boxY + 70, boxWidth - 40, inputBoxHeight, BLUE);
-        }
+        DrawText(maskedPassword, passwordBox.x + 5, passwordBox.y + 5, 20, BLACK);
 
         // Sign In Button
         DrawRectangle(signInButtonX, signInButtonY, buttonWidth, buttonHeight, loginHovered ? DARKBLUE : BLUE);
