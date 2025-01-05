@@ -115,7 +115,7 @@ int main() {
 
         // Sign In Button
         DrawRectangle(signInButtonX, signInButtonY, buttonWidth, buttonHeight, loginHovered ? DARKBLUE : BLUE);
-        DrawText("Sign In", signInButtonX + (buttonWidth / 2) - MeasureText("Sign In", 20) / 2, signInButtonY + 10, 20, WHITE);
+        DrawText("Login", signInButtonX + (buttonWidth / 2) - MeasureText("Sign In", 20) / 2, signInButtonY + 10, 20, WHITE);
 
         // Create Account Button
         DrawRectangle(createAccountButtonX, createAccountButtonY, createAccountButtonWidth, buttonHeight, createAccountHovered ? DARKGREEN : GREEN);
