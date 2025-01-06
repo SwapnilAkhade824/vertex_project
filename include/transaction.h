@@ -89,6 +89,5 @@ void logTransaction(int fromAccountNumber, int toAccountNumber, float amount) {
 
     // Write the transaction details to the CSV file
     fprintf(logFile, "%d,%d,%.2f,%s\n", fromAccountNumber, toAccountNumber, amount, timeStr);
-
     fclose(logFile);
 }

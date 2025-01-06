@@ -1,3 +1,6 @@
+#ifndef HFILE_H
+#define HFILE_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,11 +8,18 @@
 struct BankAccount {
     int accountNumber;
     char accountHolder[100];
-    char dob[11];  // For storing date in YYYY-MM-DD format
-    char aadhaarCard[13];  // Assuming Aadhaar number is a 12-digit number
+    char dob[11]; // YYYY-MM-DD format
+    char aadhaarCard[13]; // 12-digit Aadhaar number
     float balance;
 };
 
+// Function declarations
+int formatDate(char *dobInput, char *formattedDob);
+void createAccount();
+void deposit();
+void withdraw();
+void displayAccount();
+void listAccounts();
 
 // Function to validate and format the date
 int formatDate(char *dobInput, char *formattedDob) {
@@ -247,3 +257,4 @@ void listAccounts() {
         printf("No accounts found.\n");
     }
 }
+#endif // HFILE_H
