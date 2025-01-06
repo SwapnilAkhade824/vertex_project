@@ -76,7 +76,7 @@ void createAccount() {
     scanf("%s", account.aadhaarCard);
     account.balance = 0.0;
 
-    FILE *file = fopen("accounts.csv", "a");
+    FILE *file = fopen("../database/accounts.csv", "a");
     if (file == NULL) {
         printf("Error opening file.\n");
         return;
@@ -96,7 +96,7 @@ void deposit() {
     printf("Enter amount to deposit: ");
     scanf("%f", &amount);
 
-    FILE *file = fopen("accounts.csv", "r+");
+    FILE *file = fopen("../database/accounts.csv", "r+");
     if (file == NULL) {
         printf("Error opening file.\n");
         return;
@@ -124,7 +124,7 @@ void deposit() {
 
     // If account found, rewrite the file with the updated balance
     if (found) {
-        file = fopen("accounts.csv", "w");
+        file = fopen("../database/accounts.csv", "w");
         if (file == NULL) {
             printf("Error opening file.\n");
             return;
@@ -149,7 +149,7 @@ void withdraw() {
     printf("Enter amount to withdraw: ");
     scanf("%f", &amount);
 
-    FILE *file = fopen("accounts.csv", "r+");
+    FILE *file = fopen("../database/accounts.csv", "r+");
     if (file == NULL) {
         printf("Error opening file.\n");
         return;
@@ -182,7 +182,7 @@ void withdraw() {
 
     // If account found, rewrite the file with the updated balance
     if (found == 1) {
-        file = fopen("accounts.csv", "w");
+        file = fopen("../database/accounts.csv", "w");
         if (file == NULL) {
             printf("Error opening file.\n");
             return;
@@ -206,7 +206,7 @@ void displayAccount() {
     printf("Enter account number: ");
     scanf("%d", &accountNumber);
 
-    FILE *file = fopen("accounts.csv", "r");
+    FILE *file = fopen("../database/accounts.csv", "r");
     if (file == NULL) {
         printf("Error opening file.\n");
         return;
@@ -234,7 +234,7 @@ void displayAccount() {
 
 // Function to list all accounts
 void listAccounts() {
-    FILE *file = fopen("accounts.csv", "r");
+    FILE *file = fopen("../database/accounts.csv", "r");
     if (file == NULL) {
         printf("Error opening file.\n");
         return;

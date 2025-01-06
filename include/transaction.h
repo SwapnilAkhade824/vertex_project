@@ -17,7 +17,7 @@ void transferFunds() {
     printf("Enter amount to transfer: ");
     scanf("%f", &amount);
 
-    FILE *file = fopen("accounts.csv", "r+");
+    FILE *file = fopen("../database/accounts.csv", "r+");
     if (file == NULL) {
         printf("Error opening file.\n");
         return;
@@ -53,7 +53,7 @@ void transferFunds() {
 
     if (fromFound == 1 && toFound == 1) {
         // Update the accounts file with the new balances (CSV format)
-        file = fopen("accounts.csv", "w");
+        file = fopen("../database/accounts.csv", "w");
         if (file == NULL) {
             printf("Error opening file.\n");
             return;
@@ -81,7 +81,7 @@ void logTransaction(int fromAccountNumber, int toAccountNumber, float amount) {
     strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", tm_info);
 
     // Open the transaction log file in append mode
-    FILE *logFile = fopen("transfer_log.csv", "a");
+    FILE *logFile = fopen("../database/transfer_log.csv", "a");
     if (logFile == NULL) {
         printf("Error opening log file.\n");
         return;
