@@ -1,3 +1,4 @@
+ // Assuming raylib is in the include folder
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -8,9 +9,6 @@
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 800
 #define RAYGUI_IMPLEMENTATION
-
-// Screen enumeration is declared in hfile.h, no need to declare it again here
-
 // Function Declarations
 int GuiTextBox(Rectangle bounds, char *text, int textSize, bool editMode);    
 void showAccountDetails();
@@ -18,6 +16,8 @@ void deposit();
 void withdraw();
 void sendMoney();
 void Logout();
+
+// Screen enumeration is declared in hfile.h, no need to declare it again here
 
 // Button struct for simplicity
 typedef struct Button {
@@ -44,8 +44,6 @@ static bool isTransitioning = false;
 static float transitionAlpha = 0.0f; // 0.0 (transparent) to 1.0 (opaque)
 static Screen nextScreen;
 static Screen previousScreen; // To store the previous screen when transitioning
-static Screen currentScreen = SCREEN_MAIN;  // Start with the main screen
-extern Screen currentScreen;
 
 // Function to start a transition
 void StartTransition(Screen targetScreen) {
@@ -78,6 +76,7 @@ void DrawTransition() {
         DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Fade(BLACK, transitionAlpha));
     }
 }
+
 
 void drawMainScreen() {
     const char *bankName = "Crest Bank";
@@ -130,48 +129,72 @@ void drawMainScreen() {
     }
 }
 
+
+// // Add this global variable at the top or make it static inside main()
+// Screen currentScreen = SCREEN_MAIN;
+
 int main(void) {
     // Initialization
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Crest Bank - Navigation UI");
     SetTargetFPS(60);
 
+    // Bank name
+    const char *bankName = "Crest Bank";
+
+    // Dynamically center buttons
+    int buttonWidth = 300;
+    int buttonHeight = 50;
+    int buttonSpacing = 20;
+    int totalHeight = (5 * buttonHeight) + (4 * buttonSpacing);
+    int startY = (SCREEN_HEIGHT - totalHeight) / 2;
+
+    // Buttons
+    Button buttons[5] = {
+        {{(SCREEN_WIDTH - buttonWidth) / 2, startY, buttonWidth, buttonHeight}, "Account Details", false},
+        {{(SCREEN_WIDTH - buttonWidth) / 2, startY + (buttonHeight + buttonSpacing) * 1, buttonWidth, buttonHeight}, "Deposit", false},
+        {{(SCREEN_WIDTH - buttonWidth) / 2, startY + (buttonHeight + buttonSpacing) * 2, buttonWidth, buttonHeight}, "Withdraw", false},
+        {{(SCREEN_WIDTH - buttonWidth) / 2, startY + (buttonHeight + buttonSpacing) * 3, buttonWidth, buttonHeight}, "Send Money", false},
+        {{(SCREEN_WIDTH - buttonWidth) / 2, startY + (buttonHeight + buttonSpacing) * 4, buttonWidth, buttonHeight}, "Logout", false}
+    };
+
     // Main loop
     while (!WindowShouldClose()) {
-        // Update logic
-        if (isTransitioning) {
-            UpdateTransition();
-        }
-
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
-
-        // Render current screen
-        switch (currentScreen) {
-            case SCREEN_MAIN:
-                drawMainScreen();
-                break;
-            case SCREEN_ACCOUNT_DETAILS:
-                displayAccount();
-                break;
-            case SCREEN_DEPOSIT:
-                deposit();
-                break;
-            case SCREEN_WITHDRAW:
-                withdraw();
-                break;
-            case SCREEN_SEND_MONEY:
-                transferFunds();
-                break;
-            case SCREEN_LOGOUT:
-                DrawText("Logging Out...", SCREEN_WIDTH / 2 - MeasureText("Logging Out...", 20) / 2, SCREEN_HEIGHT / 2, 20, DARKGRAY);
-                break;
-        }
-
-        // Draw transition effect (if active)
-        DrawTransition();
-
-        EndDrawing();
+    // Update logic
+    if (isTransitioning) {
+        UpdateTransition();
     }
+
+    BeginDrawing();
+    ClearBackground(RAYWHITE);
+
+    // Render current screen
+    switch (currentScreen) {
+        case SCREEN_MAIN:
+            drawMainScreen();
+            break;
+        case SCREEN_ACCOUNT_DETAILS:
+            displayAccount();
+            break;
+        case SCREEN_DEPOSIT:
+            deposit();
+            break;
+        case SCREEN_WITHDRAW:
+            withdraw();
+            break;
+        case SCREEN_SEND_MONEY:
+            transferFunds();
+            break;
+        case SCREEN_LOGOUT:
+            DrawText("Logging Out...", SCREEN_WIDTH / 2 - MeasureText("Logging Out...", 20) / 2, SCREEN_HEIGHT / 2, 20, DARKGRAY);
+            break;
+    }
+
+    // Draw transition effect (if active)
+    DrawTransition();
+
+    EndDrawing();
+}
+
 
     // Deinitialization
     CloseWindow();
@@ -180,21 +203,34 @@ int main(void) {
 
 // Screen-specific function implementations
 void ShowAccountDetailsGUI() {
+    // ClearBackground(RAYWHITE);
+    // DrawText("Account Details Screen", SCREEN_WIDTH / 2 - MeasureText("Account Details Screen", 20) / 2, 200, 20, DARKGRAY);
+    // Custom account display function
     displayAccount();
 }
 
 void DepositGUI() {
+    // ClearBackground(RAYWHITE);
+    // DrawText("Deposit Screen", SCREEN_WIDTH / 2 - MeasureText("Deposit Screen", 20) / 2, 200, 20, DARKGRAY);
+    // Custom deposit function
     deposit();
 }
 
 void WithdrawGUI() {
+    // ClearBackground(RAYWHITE);
+    // DrawText("Withdraw Screen", SCREEN_WIDTH / 2 - MeasureText("Withdraw Screen", 20) / 2, 200, 20, DARKGRAY);
+    // Custom withdraw function
     withdraw();
 }
 
 void SendMoneyGUI() {
+    // ClearBackground(RAYWHITE);
+    // DrawText("Send Money Screen", SCREEN_WIDTH / 2 - MeasureText("Send Money Screen", 20) / 2, 200, 20, DARKGRAY);
+    // Custom transfer function
     transferFunds();
 }
 
 void LogoutGUI() {
-    DrawText("Logging Out...", SCREEN_WIDTH / 2 - MeasureText("Logging Out...", 20) / 2, SCREEN_HEIGHT / 2, 20, DARKGRAY);
+    // ClearBackground(RAYWHITE);
+    DrawText("Logging Out...", SCREEN_WIDTH / 2 - MeasureText("Logging Out...", 20) / 2, 200, 20, DARKGRAY);
 }
