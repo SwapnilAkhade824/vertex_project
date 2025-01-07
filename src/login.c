@@ -1,13 +1,58 @@
 #include <raylib.h>
 #include <string.h>
 #include <stdio.h>
+#include <dirent.h>
+#include <sys/stat.h>
+
+// Function to recursively search for a file
+int findFileInDirectory(const char *directory, const char *filename, char *resultPath) {
+    DIR *dir;
+    struct dirent *entry;
+
+    if (!(dir = opendir(directory)))
+        return 0; // Could not open directory
+
+    while ((entry = readdir(dir)) != NULL) {
+        char path[1024];
+        struct stat statbuf;
+
+        // Ignore "." and ".."
+        if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
+            continue;
+
+        // Construct the path
+        snprintf(path, sizeof(path), "%s/%s", directory, entry->d_name);
+
+        if (stat(path, &statbuf) == 0 && S_ISDIR(statbuf.st_mode)) {
+            // Recursively search subdirectories
+            if (findFileInDirectory(path, filename, resultPath)) {
+                closedir(dir);
+                return 1;
+            }
+        } else if (strcmp(entry->d_name, filename) == 0) {
+            // File found
+            strncpy(resultPath, path, 1024);
+            closedir(dir);
+            return 1;
+        }
+    }
+
+    closedir(dir);
+    return 0; // File not found
+}
 
 int main() {
     const int screenWidth = 800;
     const int screenHeight = 600;
     InitWindow(screenWidth, screenHeight, "Crest Bank - Login Page");
 
-    Texture2D logo = LoadTexture("image/logo.png"); // Ensure path is correct  "C:\Dev\vertex\project\Image\logo.png"
+    char resultPath[1024];
+    const char *searchDir = ".."; // Start from parent directory
+    const char *imageName = "logo.png";
+
+    findFileInDirectory(searchDir, imageName, resultPath);
+
+    Texture2D logo = LoadTexture(resultPath); // Ensure path is correct  "C:\Dev\vertex\project\Image\logo.png"
 
     float logoScale = 0.5f;
     int logoWidth = logo.width * logoScale;
