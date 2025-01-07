@@ -1,13 +1,13 @@
 #include <raylib.h>
 #include <string.h>
+#include <stdio.h>
 
 int main() {
     const int screenWidth = 800;
     const int screenHeight = 600;
     InitWindow(screenWidth, screenHeight, "Crest Bank - Login Page");
 
-    Texture2D logo = LoadTexture("C:/Dev/vertex/project/Image/logo.png"); // Ensure path is correct  "C:\Dev\vertex\project\Image\logo.png"
-
+    Texture2D logo = LoadTexture("image/logo.png"); // Ensure path is correct  "C:\Dev\vertex\project\Image\logo.png"
 
     float logoScale = 0.5f;
     int logoWidth = logo.width * logoScale;
